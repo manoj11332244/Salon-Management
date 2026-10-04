@@ -9,6 +9,6 @@ public class HomeController {
 
     @GetMapping
     public String HomeControllerHandler(){
-        return "category microservice";
+        return "service offering microservice";
     }
 }
