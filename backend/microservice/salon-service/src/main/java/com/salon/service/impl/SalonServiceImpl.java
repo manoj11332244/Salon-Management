@@ -26,7 +26,7 @@ public class SalonServiceImpl implements SalonService {
         salon.setEmail(req.getEmail());
         salon.setAddress(req.getAddress());
         salon.setCity(req.getCity());
-        salon.setImages(salon.getImages());
+        salon.setImages(req.getImages());
         salon.setOwnerId(user.getId());
         salon.setOpenTime(req.getOpenTime());
         salon.setCloseTime(req.getCloseTime());
@@ -37,7 +37,10 @@ public class SalonServiceImpl implements SalonService {
     @Override
     public Salon updateSalon(SalonDTO salon, UserDTO user, Long salonId) throws Exception {
         Salon existingSalon=salonRepository.findById(salonId).orElse(null);
-        if(existingSalon !=null && salon.getOwnerId().equals(user.getId())){
+        if(! salon.getOwnerId().equals(user.getId())){
+            throw  new Exception("you don't have permission to update this salon");
+        }
+        if(existingSalon !=null){
             existingSalon.setCity(salon.getCity());
             existingSalon.setName(salon.getName());
             existingSalon.setAddress(salon.getAddress());
@@ -47,6 +50,7 @@ public class SalonServiceImpl implements SalonService {
             existingSalon.setOpenTime(salon.getOpenTime());
             existingSalon.setCloseTime(salon.getCloseTime());
             existingSalon.setOwnerId(user.getId());
+            return salonRepository.save(existingSalon);
         }
         throw new Exception("salon not exist");
     }
